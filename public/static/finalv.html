@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Tangerine">
+<link rel="stylesheet" type="text/css" href="fireworks.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="jquery-ui.css" media="screen" />
+
+<style type="text/css"> 
+body{	
+	overflow-y: hidden ! important;
+	overflow-x auto ! important;
+	background-color: black;
+	font-family: 'Tangerine', serif;
+    font-size: 24px;
+	/*text-shadow: 4px 4px 4px #aaa;*/
+}
+.ui-widget {
+	font-family: 'Tangerine', serif;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+#background {
+	width: 100%;
+	left: 0px;
+	top: 0px;
+	position: absolute;
+	z-index: -1;
+}
+
+.overlay{
+	background-color:black;
+	opacity:0.5;
+	filter:Alpha(opacity=50); /* IE8 and earlier */
+}
+
+#hl span {
+	opacity: 0.8;
+ 
+	/*Transition*/
+	-webkit-transition: all 0.5s ease;
+	-moz-transition: all 0.5s ease;
+	-o-transition: all 0.5s ease;
+ 
+	/*Reflection*/
+	-webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.1)));
+}
+ 
+#hl span:hover {  
+   opacity: 1;
+ 
+   /*Reflection*/
+  -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), color-stop(.7, transparent), to(rgba(0,0,0,0.4)));
+ 
+   /*Glow*/
+  -webkit-box-shadow: 0px 0px 20px rgba(255,255,255,0.8);
+  -moz-box-shadow: 0px 0px 20px rgba(255,255,255,0.8);
+  box-shadow: 0px 0px 20px rgba(255,255,255,0.8);
+}
+
+.box_rotate7 {
+  -webkit-transform: rotate(-8deg);  /* Saf3.1+, Chrome */
+     -moz-transform: rotate(-8deg);  /* FF3.5+ */
+      -ms-transform: rotate(-8deg);  /* IE9 */
+       -o-transform: rotate(-8deg);  /* Opera 10.5 */
+          transform: rotate(-8deg);
+             /*filter: progid:DXImageTransform.Microsoft.Matrix(/* IE6–IE9 */
+                     M11=0.99026806874157031508377486734485, M12=0.13917310096006544411249666330111,M21=-0.13917310096006544411249666330111, M22=0.99026806874157031508377486734485, Dx=200, sizingMethod='auto expand');*/					 
+               zoom: 1;
+}
+
+.box_rotate3 {
+  -webkit-transform: rotate(-3deg);  /* Saf3.1+, Chrome */
+     -moz-transform: rotate(-3deg);  /* FF3.5+ */
+      -ms-transform: rotate(-3deg);  /* IE9 */
+       -o-transform: rotate(-3deg);  /* Opera 10.5 */
+          transform: rotate(-3deg);
+}
+
+.shadow1 {
+	-moz-box-shadow: 3px 3px 4px #000;
+	-webkit-box-shadow: 3px 3px 4px #000;
+	box-shadow: 3px 3px 4px #000;
+}
+
+#rsvp { width: 520px; margin: 0px 0 0px; }
+#rsvp .viewport { width: 500px; height: 330px; overflow: hidden; position: relative; }
+#rsvp .overview { list-style: none; position: absolute; left: 0; top: 0; padding: 0; margin: 0; }
+#rsvp .scrollbar{ background: transparent url(bg-scrollbar-track-y.png) no-repeat 0 0; position: relative; background-position: 0 0; float: right; width: 15px; }
+#rsvp .track { background: transparent url(bg-scrollbar-trackend-y.png) no-repeat 0 100%; height: 100%; width:15px; position: relative; }
+#rsvp .thumb { background: transparent url(bg-scrollbar-thumb-y.png) no-repeat 50% 100%; height: 20px; width: 25px; cursor: pointer; overflow: hidden; position: absolute; top: 0; left: -5px; }
+#rsvp .thumb .end { background: transparent url(bg-scrollbar-thumb-y.png) no-repeat 50% 0; overflow: hidden; height: 5px; width: 25px; }
+#rsvp .disable { display: none; }
+
+#easteregg{
+	
+}
+
+</style>
+<script src="jquery.min.js"></script>
+<script src="jquery.ui.min.js"></script>
+<script src="jquery.jplayer.min.js"></script>
+<script src="jquery.texteffects.js"></script>
+<script src="jquery.tinyscrollbar.min.js"></script>
+<script src="jquery.waitforimages.js"></script>
+<script src="jquery.detectmobile.js"></script>
+<script type="text/javascript" src="soundmanager2-nodebug-jsmin.js"></script>
+<script type="text/javascript" src="fireworks.js"></script>
+
+
+<script type="text/javascript">
+	var durationFast = 500;
+	var durationSlow = 1000;
+	var menuHeight = $(window).height()/12;
+	var mainMenuItemWidth = $(window).width()/12;
+	
+	function menuSetup(){
+		$("#background img").css({			
+			width: $(window).width(),
+			height: $(window).height()
+		});
+		$("#hl").css({
+			position: "absolute",
+			width: "100%",
+			height: menuHeight,
+			left: 0,
+			top: $(window).height() - menuHeight,
+			color: "white"
+		});
+		$("#hl span").css({
+			width: mainMenuItemWidth,
+			float: "right",
+			height: $("#hl").height(),
+			"text-align":"center",
+			"padding-top": $("#hl").height()/3,
+			"margin-right": "8px",
+			"cursor":"pointer",
+			color: "#ffffff"
+		});	
+		/*$(".addthis_toolbox").css({
+			position: "absolute",
+			width: "100%",
+			height: menuHeight,
+			left: 0,
+			top: $(window).height() - (menuHeight*0.7),
+			"z-index": "3"
+		});*/
+	}
+	
+	function toggleMenuOptions(){
+		$(".visibleLater").toggle();
+	}
+	
+	function startMusic(){
+		$("#jquery_jplayer").jPlayer({
+				ready: function (event) {
+					$(this).jPlayer("setMedia", {
+						mp3:"/bk1.mp3"
+					}).jPlayer("play");
+				},
+				loop : true,
+				supplied: "mp3",
+				wmode: "window",
+				swfPath: "/",
+				volume: 1,
+				cssSelectorAncestor: "#jp_container"
+		});
+	}
+	
+	function startMusicMobile(){
+		$("#jquery_jplayer").jPlayer({
+				ready: function (event) {
+					$(this).jPlayer("setMedia", {
+						mp3:"/bk1m.mp3"
+					});
+				},
+				loop : true,
+				supplied: "mp3",
+				wmode: "window",
+				swfPath: "/",
+				volume: 1,
+				cssSelectorAncestor: "#jp_container"
+		});
+	}
+	
+	var running=true;
+	function toggleMusic(){
+		if(running == true){
+			$("#jquery_jplayer").jPlayer("pause");
+			$(".musicSpan").text("Music On");
+			running=false;
+		}else{
+			$("#jquery_jplayer").jPlayer("play");
+			$(".musicSpan").text("Music Off");
+			running=true;
+		}
+	}	
+	
+	function showInviteOuter(){
+		$("#mainContent").empty();
+		$("#mainContent").append("<img id='iv1' src='iv1a.jpeg' style='display:none;' class='iv1main'/>");
+		$(".iv1main").css({
+			position: "absolute",
+			width: $(window).width()*0.6,
+			height: $(window).height()*0.6,
+			top: $(window).height()*0.6 -$(window).height()*0.4,
+			left: $(window).width()*0.6 - $(window).width()*0.4
+		});
+		//$(".iv1main").addClass("box_rotate7");
+		$(".iv1main").addClass("shadow1");
+		$("#mainContent").waitForImages(function(){
+			$("#iv1").fadeIn(2000, function(){
+				displayYouAreInvited();
+			});
+		});		
+	}
+	
+	function displayYouAreInvited(){
+		$("#mainContent").append("<div id='iv1content'/>");
+		var fontSize = "60px"
+		if(jQuery.browser.mobile == true){
+			fontSize = "44px"
+		}
+		
+		$("#iv1content").css({
+			position: "absolute",
+			top: $("#iv1").position().top + ($("#iv1").height()*0.4),
+			left: $("#iv1").position().left + ($("#iv1").width()*0.6 - $("#iv1").width()*0.3),
+			"font-size": fontSize,
+			//"color": "#680003",
+			"color": "#545454",
+			//"text-shadow": "10px 10px 10px #aaa",
+			"font-weight":"bold"
+		});
+		//$("#iv1content").addClass("box_rotate7");
+		$("#iv1content").text("You're Invited!!!  ");
+		$("#iv1content").typewriter(function(){
+			window.setTimeout(function() {
+				showInviteContent();
+			}, 2000);
+		});				
+	}
+	
+	function showInviteContent(){
+		$("#mainContent").append("<img id='iv2' src='iv2a.jpeg' style='display:none;' class='iv2main'/>");
+		$(".iv2main").css({
+			position: "absolute",
+			width: $(window).width()*0.6,
+			height: $(window).height()*0.6,
+			top: -$(window).width()*0.6,
+			left: $(window).width()
+		});
+		$(".iv2main").css({"display":"block"});
+		$(".iv2main").addClass("shadow1");
+		$("#iv2").addClass("box_rotate7");
+		
+		$("#mainContent").waitForImages(function(){
+			$(".iv2main").animate({
+				top: $(window).height()*0.6 -$(window).height()*0.4,
+				left: $(window).width()*0.6 - $(window).width()*0.4
+			}, 1000, function(){
+				displayInviteContentsText();
+			})
+		});
+		
+	}
+	
+	function displayInviteContentsText(){
+		$("#mainContent").append("<div id='iv2content'/>");
+		var fontsize = ($("#iv2").height() + $("#iv2").width())/841.77
+		var contentTop = $("#iv2").position().top + ($("#iv2").height()*0.19)
+		
+		if(jQuery.browser.mobile == true && $("#iv2").height() < $("#iv2").width()){
+			fontsize = fontsize*0.95
+		}
+		
+		if(isIE8OrLess()){
+			//Image not rotated, so top changes
+			contentTop = $("#iv2").position().top + ($("#iv2").height()*0.05)
+		}
+		
+		$("#iv2content").css({
+			position: "absolute",
+			top: contentTop,
+			//left: $("#iv2").position().left + ($("#iv2").width()*0.6 - $("#iv2").width()*0.35),
+			height: ($("#iv2").height() > $("#iv2").width() ? $("#iv2").height() : $("#iv2").width()),
+			width: ($("#iv2").height() > $("#iv2").width() ? $("#iv2").height() : $("#iv2").width()),
+			"font-size": (fontsize+"em"),
+			"color": "#D0C978",
+			//"text-shadow": "10px 10px 10px #000",
+			"font-weight":"bold",
+			"text-align": "center"
+		});
+		$("#iv2content").css({
+			left: $("#iv2").position().left + ($("#iv2").width()*0.5 - $("#iv2content").width()*0.5),
+		});
+		$("#iv2content").addClass("box_rotate7");
+		$("#iv2content").append("<span class='l1'>Varsha and Roopesh </span>");
+		$(".l1").typewriter(line2);		
+	}
+	
+	var line2 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l2'>together with their parents </span>");
+		$(".l2").typewriter(line3);
+	}
+	
+	var line3 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l3'>request the pleasure of your company </span>");
+		$(".l3").typewriter(line4);
+	}
+	
+	var line4 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l4'>at the wedding reception </span>");
+		$(".l4").typewriter(line5);
+	}
+	
+	var line5 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l5'>on </span>");
+		$(".l5").typewriter(line6);
+	}
+	
+	var line6 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l6'>Saturday, 8th September 2012 </span>");
+		$(".l6").typewriter(line7);
+	}
+	
+	var line7 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l7'>at </span>");
+		$(".l7").typewriter(line8);
+	}
+	
+	var line8 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l8'>7:00 in the evening </span>");
+		$(".l8").typewriter(line9);
+	}
+	
+	var line9 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l9'>at \"Seasons Hall\", Hotel Royal Orchid, </span>");
+		$(".l9").typewriter(line10);
+	}
+	
+	var line10 = function(){
+		$("#iv2content").append("<br />");
+		$("#iv2content").append("<span class='l10'>Bangalore </span>");
+		$(".l10").typewriter(function(){
+			$(".addthis_toolbox").fadeIn();
+			window.setTimeout(function() {
+				showFireworks();
+			}, 500);
+		});
+	}
+		
+	function showFireworks(){
+		var r=10+parseInt(Math.random()*30);
+		for(var i=r; i--;){
+			setTimeout('createFirework(8,14,2,null,null,null,null,null,Math.random()>0.5,true)',(i+1)*(1+parseInt(Math.random()*1000)));
+			//setTimeout('createFirework(21,166,6,4,null,null,null,null,false,true)',(i+1)*(1+parseInt(Math.random()*1000)));
+		}
+		return false;
+	}
+	
+	function adviseAgainstIE(){
+		if(isIE8OrLess()){//TODO change to check more browsers and better notification
+			alert('It\'s about time that you use a real browser like Firefox or Chrome. Best when not viewed in IE version 8 and less. You can use IE 9 and above if you are a big fan of using a bad product!');
+		}
+	}
+	
+	function isIE8OrLess(){
+		if($.browser.msie == true && parseInt($.browser.version, 10) <= 8){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	function showMapDialog(){
+		$("#directions").dialog({title: 'Directions', width: '350',  modal: true, draggable: false, resizable: false, autoOpen: true});
+	}
+	
+	function showRSVPDialog(){		
+		$("#rsvp").dialog({title: 'RSVP', width: '603',  height: '435', modal: true, draggable: false, resizable: true, autoOpen: true});
+		$("#rsvp").tinyscrollbar();
+	}
+	
+	function showContactUsDialog(){
+		$("#contactUs").dialog({title: 'Contact Us', width: '350',  modal: true, draggable: false, resizable: false, autoOpen: true});
+	}
+	
+	function setupEaster(){
+		$(document).keydown(function(event) {		  
+		  if (event.which == 86) {
+			 $("#easteregg").dialog({title: 'Best Wishes', modal: true, draggable: false, resizable: false, autoOpen: true});
+		   }
+		});
+	}
+
+	var last4KeyPresses = new Array();
+	
+	function setupStatCounterView(){
+		$(document).keydown(function(event) {
+		  if(last4KeyPresses.length >= 4)last4KeyPresses.pop();
+		  last4KeyPresses.push(event.which);
+		  if (last4KeyPresses.join() == "37,40,39,38") {
+			 window.open("http://statcounter.com/p8116304/summary/?guest=1");
+		   }
+		});
+	}
+	
+       $(window).load(function(){		
+		adviseAgainstIE();
+		setupEaster();
+		setupStatCounterView();
+		//startMusic();
+		menuSetup();
+		
+		if(jQuery.browser.mobile == true){					
+			running = false;
+			$(".musicSpan").text("Music Off");
+			startMusicMobile();
+			setTimeout(function(){
+				toggleMusic();
+			},12000);
+		}else{
+			startMusic();
+		}
+				
+		$("#background").waitForImages(function(){
+			$("#background").fadeIn(4000, function(){
+				toggleMenuOptions();
+				showInviteOuter();
+			});		
+		});
+		
+		
+	});	
+	
+</script>
+ 
+</head>
+<body>
+<div id="background" style="display:none;">
+	<img src="bk1a.jpeg"/>
+</div>
+
+<div id="mainContent">
+	
+</div>
+
+<div id="fireworks-template">
+ <div id="fw" class="firework"></div>
+ <div id="fp" class="fireworkParticle"><img src="particles.gif" alt="" /></div>
+</div>
+<div id="fireContainer"></div>
+
+<div id="directions" style="display:none;">
+<iframe width="300" height="300" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://maps.google.co.in/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=Hotel+Royal+Orchid,+Golf+View+Avenue,+Kodihalli,+Bangalore,+Karnataka&amp;aq=&amp;sll=12.995024,77.60725&amp;sspn=0.057288,0.104628&amp;ie=UTF8&amp;hq=Hotel+Royal+Orchid,+Golf+View+Avenue,+Kodihalli,+Bangalore,+Karnataka&amp;t=m&amp;ll=12.957345,77.644157&amp;spn=0.012547,0.012875&amp;z=15&amp;iwloc=A&amp;output=embed"></iframe><br />
+<a href="http://maps.google.co.in/maps?f=q&amp;source=embed&amp;hl=en&amp;geocode=&amp;q=Hotel+Royal+Orchid,+Golf+View+Avenue,+Kodihalli,+Bangalore,+Karnataka&amp;aq=&amp;sll=12.995024,77.60725&amp;sspn=0.057288,0.104628&amp;ie=UTF8&amp;hq=Hotel+Royal+Orchid,+Golf+View+Avenue,+Kodihalli,+Bangalore,+Karnataka&amp;t=m&amp;ll=12.957345,77.644157&amp;spn=0.012547,0.012875&amp;z=15&amp;iwloc=A" style="color:#0000FF;text-align:left" target="_blank">View Larger Map</a>
+
+<!-- <script src="//www.gmodules.com/ig/ifr?url=http://hosting.gmodules.com/ig/gadgets/file/114281111391296844949/driving-directions.xml&amp;up_fromLocation=&amp;up_myLocations=Hotel%20Royal%20Orchid%2C%20Golf%20View%20Avenue%2C%20Kodihalli%2C%20Bangalore%2C%20Karnataka&amp;up_defaultDirectionsType=&amp;up_autoExpand=false&amp;synd=open&amp;w=300&amp;h=55&amp;title=Directions+by+Google+Maps&amp;brand=light&amp;lang=en&amp;country=IN&amp;border=%23ffffff%7C1px%2C1px+solid+black%7C1px%2C1px+solid+black%7C0px%2C1px+black&amp;output=js"></script> -->
+
+<iframe id="remote_iframe_0" name="remote_iframe_0" style="border:2;padding:0;margin:0;width:100%;height:91px;overflow:hidden" frameborder="0" scrolling="no" src="http://www-igprev-opensocial.googleusercontent.com/gadgets/ifr?exp_rpc_js=1&amp;exp_track_js=1&amp;url=http%3A%2F%2Fwww.google.com%2Fig%2Fmodules%2Fdriving_directions.xml&amp;container=igprev&amp;view=default&amp;lang=en&amp;country=IN&amp;sanitize=0&amp;v=d4325b45c3eac0ea&amp;parent=http://www.google.com&amp;libs=core:core.io:core.iglegacy:auth-refresh&amp;is_signedin=1&amp;synd=igprev&amp;view=default&amp;up_from=&amp;up_country=0&amp;up_to=Hotel%20Royal%20Orchid%2C%20Golf%20View%20Avenue%2C%20Kodihalli%2C%20Bangalore%2C%20Karnataka#rpctoken=-621874108&amp;ifpctok=-621874108"></iframe>
+
+</div>
+
+<div id="rsvp" style="display:none;">
+	<div class="scrollbar"><div class="track"><div class="thumb"><div class="end"></div></div></div></div>
+	<div class="viewport">
+		<div class="overview">
+			<iframe src="https://docs.google.com/spreadsheet/embeddedform?formkey=dC12NEo2VEM0WWdIaDlMdl9aV0thUmc6MQ" width="550" height="650" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+		</div>
+	</div>
+</div>
+
+<div id="easteregg" style="display:none">
+	<span class="mymessage" style="font-size: 32px;">With best compliments from Shreyas Purohit. <br />May you both have a happy, wonderful, funfilled, and rocking life ahead! May god bless you both!</span>
+</div>
+<div id="contactUs" style="display:none;">
+	<span class="mymessage" style="font-size: 32px;">
+	Before 30th August <br /> Varsha: +447424174321 <br /> Roopesh: +447424185103 <br /><br />
+	After 30th August <br />  Roopesh: +919008699114
+	</span>
+</div>
+
+<!-- <div id="rsvp" style="display:none;">
+	<iframe src="https://docs.google.com/spreadsheet/embeddedform?formkey=dC12NEo2VEM0WWdIaDlMdl9aV0thUmc6MQ" width="550" height="650" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>
+</div>-->
+
+<!-- AddThis Button BEGIN -->
+<div class="addthis_toolbox addthis_floating_style addthis_32x32_style" style="left:0px;top:50px;display:none;">
+	<a class="addthis_button_preferred_1"></a>
+	<a class="addthis_button_preferred_2"></a>
+	<a class="addthis_button_preferred_3"></a>
+	<a class="addthis_button_preferred_4"></a>
+	<a class="addthis_button_compact"></a>
+	<a class="addthis_counter addthis_bubble_style"></a>
+</div>
+<script>
+	var addthis_config =
+	{
+		
+		services_expanded: 'blogger,facebook,google_plusone_share,twitter'
+	}
+</script>
+<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=xa-4fff9fba5fff3f99"></script>
+<!-- AddThis Button END -->
+<!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+var sc_project=8116304; 
+var sc_invisible=1; 
+var sc_security="77c45f64"; 
+</script>
+<script type="text/javascript"
+src="http://www.statcounter.com/counter/counter.js"></script>
+<noscript><div class="statcounter"><a title="statistics in
+vBulletin" href="http://statcounter.com/vbulletin/"
+target="_blank"><img class="statcounter"
+src="http://c.statcounter.com/8116304/0/77c45f64/1/"
+alt="statistics in vBulletin"></a></div></noscript>
+<!-- End of StatCounter Code for Default Guide -->
+<div id="hl" class="overlay">	
+	<span class="musicSpan visibleLater" style="display:none" onclick="toggleMusic()"> Music Off</span>
+	<span class="contactUsSpan visibleLater" style="display:none" onclick="showContactUsDialog()"> Contact Us</span>
+	<span class="rsvpSpan visibleLater" style="display:none" onclick="showRSVPDialog()"> RSVP</span>
+	<span class="dirSpan visibleLater" style="display:none" onclick="showMapDialog()"> Directions</span>
+</div>
+<div id="jquery_jplayer" class="jp-jplayer"></div>
+</body>
+</html>
+
