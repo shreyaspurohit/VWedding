@@ -1,4 +1,0 @@
-A simple Http server to serve static files derived from play
-============================================================
-
-All files in /public/static folder is served. The default "/" is mapped to finalv.html.
